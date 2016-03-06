@@ -52,7 +52,7 @@ class Parser(object):
         self._parse()
 
     def compile(self):
-        p = Popen(self.cmdline, stdout=PIPE, stdin=PIPE)
+        p = Popen(self.cmdline, stdout=PIPE, stdin=PIPE, stderr=PIPE)
         code = self._injectTags()
         printdebug("Compiler input:\n" + code)
         out = p.communicate(code)[0]
