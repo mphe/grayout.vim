@@ -102,10 +102,10 @@ def printdebug(text):
             f.write(text + "\n")
         print(text)
 
-# TODO: find a better solution
+# TODO: find a better solution for sign ids
 bufnr = int(vim.eval("bufnr('%')"))
 basesignid = (1 + bufnr) * 25397
-debug = bool(vim.eval("g:grayout_debug"))
+debug = int(vim.eval("g:grayout_debug"))
 numgrayouts = int(vim.eval("b:num_grayout_lines"))
 
 printdebug("bufnr: " + str(bufnr))
