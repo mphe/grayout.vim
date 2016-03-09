@@ -10,10 +10,10 @@ class LineInfo(object):
     def __init__(self, n, linebegin = -1, lineend = -1):
         self.linebegin = linebegin
         self.lineend = lineend
-        self.n = n
+        self.active = False
 
     def __str__(self):
-        return "n={} begin={} end={}".format(self.n, self.linebegin, self.lineend)
+        return "begin={} end={}".format(self.linebegin, self.lineend)
 
 
 class Parser(object):
@@ -22,21 +22,21 @@ class Parser(object):
 
     def __init__(self):
         self._blocks = []
-        self._visblocks = []
         self.lines = []
         self._uuid = None
 
     def getBlocks(self):
         return self._blocks
 
-    def getVisibleBlocks(self):
-        return self._visblocks
+    def getActiveBlocks(self):
+        for i in self._blocks:
+            if i.active:
+                yield i
 
-    def getInvisibleBlocks(self):
-        tmp = list(self._blocks)
-        for i in self._visblocks[::-1]:
-            del tmp[i.n]
-        return tmp
+    def getInactiveBlocks(self):
+        for i in self._blocks:
+            if not i.active:
+                yield i
 
     def parsestring(self, text):
         self.lines = text.splitlines(True)
@@ -61,21 +61,18 @@ class Parser(object):
 
     def _injectTags(self):
         self._uuid = uuid.uuid1()
-        for i in self._blocks[::-1]:
+        for n,i in enumerate(self._blocks[::-1], 1):
+            i.active = False # Reset
             if i.linebegin != i.lineend:
-                self.lines.insert(i.linebegin, "{} {}".format(self._uuid, str(i)))
+                self.lines.insert(i.linebegin, "{} n={} {}".format(self._uuid, str(len(self._blocks) - n), str(i)))
         return "\n".join(self.lines)
 
     def _parseTags(self, text):
         r = re.compile(str(self._uuid) + r" n=(\d+) begin=(\d+) end=(\d+)")
-        self._visblocks = []
         for i in text.splitlines():
             m = r.match(i.strip())
             if m:
-                self._visblocks.append(LineInfo(
-                    int(m.group(1)),
-                    int(m.group(2)),
-                    int(m.group(3))))
+                self._blocks[int(m.group(1))].active = True
 
     def _parse(self):
         self._tags = []
@@ -121,18 +118,19 @@ parser = Parser()
 parser.parselines(vim.current.buffer)
 parser.compile()
 
-blocks = parser.getInvisibleBlocks()
-printdebug("Inactive blocks:")
-for i in blocks:
-    printdebug(str(i))
-printdebug("Active blocks:")
-for i in parser.getVisibleBlocks():
-    printdebug(str(i))
+if debug:
+    printdebug("\nInactive blocks:")
+    for i in parser.getInactiveBlocks():
+        printdebug(i)
+
+    printdebug("\nActive blocks:")
+    for i in parser.getActiveBlocks():
+        printdebug(i)
 
 
 printdebug("Applying new grayouts...")
 numgrayouts = 0
-for b in blocks:
+for b in parser.getInactiveBlocks():
     for i in range(b.linebegin + 1, b.lineend):
         signid = basesignid + numgrayouts
         printdebug("Creating grayout {} in line {}".format(signid, i))
