@@ -8,6 +8,7 @@ if exists('vim_c_grayout_loaded')
 else
     let g:vim_c_grayout_loaded = 1
     let g:grayout_debug = 0
+    let g:grayout_debug_logfile = 0
 
     highlight PreprocessorGrayout cterm=italic gui=italic ctermfg=DarkGray guifg=DarkGray
     sign define PreprocessorGrayout linehl=PreprocessorGrayout

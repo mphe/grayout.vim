@@ -96,14 +96,16 @@ class Parser(object):
 def printdebug(*args):
     text = " ".join([ str(i) for i in args ])
     if debug:
+        print(text)
+    if debug_file:
         with open("grayout-log.txt", "a") as f:
             f.write(text + "\n")
-        print(text)
 
 # TODO: find a better solution for sign ids
 bufnr = int(vim.eval("bufnr('%')"))
 basesignid = (1 + bufnr) * 25397
 debug = int(vim.eval("g:grayout_debug"))
+debug_file = int(vim.eval("g:grayout_debug_logfile"))
 numgrayouts = int(vim.eval("b:num_grayout_lines"))
 
 printdebug("bufnr:", bufnr)
