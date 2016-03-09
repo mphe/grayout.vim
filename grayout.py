@@ -54,9 +54,9 @@ class Parser(object):
     def compile(self):
         p = Popen(self.cmdline, stdout=PIPE, stdin=PIPE, stderr=PIPE)
         code = self._injectTags()
-        printdebug("Compiler input:\n" + code)
+        printdebug("\nCompiler input:\n" + code)
         out = p.communicate(code)[0]
-        printdebug("Compiler output:\n" + out)
+        printdebug("\nCompiler output:\n" + out)
         self._parseTags(out)
 
     def _injectTags(self):
@@ -93,7 +93,8 @@ class Parser(object):
         tmp = self._blocks[-1]
         tmp.lineend = self._parseblock(enum)
 
-def printdebug(text):
+def printdebug(*args):
+    text = " ".join([ str(i) for i in args ])
     if debug:
         with open("grayout-log.txt", "a") as f:
             f.write(text + "\n")
@@ -105,13 +106,13 @@ basesignid = (1 + bufnr) * 25397
 debug = int(vim.eval("g:grayout_debug"))
 numgrayouts = int(vim.eval("b:num_grayout_lines"))
 
-printdebug("bufnr: " + str(bufnr))
-printdebug("basesignid: " + str(basesignid))
-printdebug("numgrayouts: " + str(numgrayouts))
+printdebug("bufnr:", bufnr)
+printdebug("basesignid:", basesignid)
+printdebug("numgrayouts:", numgrayouts)
 
-printdebug("Clearing existing grayouts...")
+printdebug("\nClearing existing grayouts...")
 for i in range(numgrayouts):
-    printdebug("Removing sign " + str(basesignid + i))
+    printdebug("Removing sign", basesignid + i)
     vim.command("sign unplace {} buffer={}".format(basesignid + i, bufnr))
 
 parser = Parser()
@@ -128,7 +129,7 @@ if debug:
         printdebug(i)
 
 
-printdebug("Applying new grayouts...")
+printdebug("\nApplying new grayouts...")
 numgrayouts = 0
 for b in parser.getInactiveBlocks():
     for i in range(b.linebegin + 1, b.lineend):
@@ -138,5 +139,5 @@ for b in parser.getInactiveBlocks():
             signid, i, vim.current.buffer.name))
         numgrayouts += 1
 
-printdebug("new numgrayouts: " + str(numgrayouts))
+printdebug("new numgrayouts: {}\n-----------------------------------------------\n".format(str(numgrayouts)))
 vim.command("let b:num_grayout_lines = " + str(numgrayouts))
