@@ -133,13 +133,20 @@ if debug:
 
 printdebug("\nApplying new grayouts...")
 numgrayouts = 0
+lastblock = None
 for b in parser.getInactiveBlocks():
+    # Skip nested blocks if the parent block is inactive
+    if lastblock and b.lineend < lastblock.lineend:
+        printdebug("Skipping nested block", b)
+        continue
+
     for i in range(b.linebegin + 1, b.lineend):
         signid = basesignid + numgrayouts
         printdebug("Creating grayout {} in line {}".format(signid, i))
         vim.command("sign place {} line={} name=PreprocessorGrayout file={}".format(
             signid, i, vim.current.buffer.name))
         numgrayouts += 1
+    lastblock = b
 
 printdebug("new numgrayouts: {}\n-----------------------------------------------\n".format(str(numgrayouts)))
 vim.command("let b:num_grayout_lines = " + str(numgrayouts))
