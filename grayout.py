@@ -51,9 +51,11 @@ class Parser(object):
         self.lines = [i for i in lines]
         self._parse()
 
-    def compile(self):
-        p = Popen(self.cmdline, stdout=PIPE, stdin=PIPE, stderr=PIPE)
+    def compile(self, cmdline = ""):
+        cmd = cmdline.split() if cmdline else Parser.cmdline
+        p = Popen(cmd, stdout=PIPE, stdin=PIPE, stderr=PIPE)
         code = self._injectTags()
+        printdebug("\nUsing cmd line:", " ".join(cmd))
         printdebug("\nCompiler input:\n" + code)
         out = p.communicate(code)[0]
         printdebug("\nCompiler output:\n" + out)
@@ -106,6 +108,7 @@ bufnr = int(vim.eval("bufnr('%')"))
 basesignid = (1 + bufnr) * 25397
 debug = int(vim.eval("g:grayout_debug"))
 debug_file = int(vim.eval("g:grayout_debug_logfile"))
+cmdline = vim.eval("g:grayout_cmd_line")
 numgrayouts = int(vim.eval("b:num_grayout_lines"))
 
 printdebug("bufnr:", bufnr)
@@ -119,7 +122,7 @@ for i in range(numgrayouts):
 
 parser = Parser()
 parser.parselines(vim.current.buffer)
-parser.compile()
+parser.compile(cmdline)
 
 if debug:
     printdebug("\nInactive blocks:")
