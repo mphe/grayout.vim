@@ -6,6 +6,15 @@ from subprocess import Popen, PIPE
 import uuid
 import vim
 
+# TODO: find a better solution for sign ids
+debug = int(vim.eval("g:grayout_debug"))
+debug_file = int(vim.eval("g:grayout_debug_logfile"))
+bufnr = int(vim.eval("bufnr('%')"))
+basesignid = (1 + bufnr) * 25397
+numgrayouts = int(vim.eval("b:num_grayout_lines"))
+cmdline = vim.eval("g:grayout_cmd_line")
+
+
 class LineInfo(object):
     def __init__(self, n, linebegin = -1, lineend = -1):
         self.linebegin = linebegin
@@ -103,53 +112,52 @@ def printdebug(*args):
         with open("grayout-log.txt", "a") as f:
             f.write(text + "\n")
 
-# TODO: find a better solution for sign ids
-bufnr = int(vim.eval("bufnr('%')"))
-basesignid = (1 + bufnr) * 25397
-debug = int(vim.eval("g:grayout_debug"))
-debug_file = int(vim.eval("g:grayout_debug_logfile"))
-cmdline = vim.eval("g:grayout_cmd_line")
-numgrayouts = int(vim.eval("b:num_grayout_lines"))
+def grayout():
+    global debug, debug_file, bufnr, basesignid, numgrayouts, cmdline
 
-printdebug("bufnr:", bufnr)
-printdebug("basesignid:", basesignid)
-printdebug("numgrayouts:", numgrayouts)
+    printdebug("bufnr:", bufnr)
+    printdebug("basesignid:", basesignid)
+    printdebug("numgrayouts:", numgrayouts)
 
-printdebug("\nClearing existing grayouts...")
-for i in range(numgrayouts):
-    printdebug("Removing sign", basesignid + i)
-    vim.command("sign unplace {} buffer={}".format(basesignid + i, bufnr))
+    printdebug("\nClearing existing grayouts...")
+    for i in range(numgrayouts):
+        printdebug("Removing sign", basesignid + i)
+        vim.command("sign unplace {} buffer={}".format(basesignid + i, bufnr))
 
-parser = Parser()
-parser.parselines(vim.current.buffer)
-parser.compile(cmdline)
+    parser = Parser()
+    parser.parselines(vim.current.buffer)
+    parser.compile(cmdline)
 
-if debug:
-    printdebug("\nInactive blocks:")
-    for i in parser.getInactiveBlocks():
-        printdebug(i)
+    if debug:
+        printdebug("\nInactive blocks:")
+        for i in parser.getInactiveBlocks():
+            printdebug(i)
 
-    printdebug("\nActive blocks:")
-    for i in parser.getActiveBlocks():
-        printdebug(i)
+        printdebug("\nActive blocks:")
+        for i in parser.getActiveBlocks():
+            printdebug(i)
 
 
-printdebug("\nApplying new grayouts...")
-numgrayouts = 0
-lastblock = None
-for b in parser.getInactiveBlocks():
-    # Skip nested blocks if the parent block is inactive
-    if lastblock and b.lineend < lastblock.lineend:
-        printdebug("Skipping nested block", b)
-        continue
+    printdebug("\nApplying new grayouts...")
+    numgrayouts = 0
+    lastblock = None
+    for b in parser.getInactiveBlocks():
+        # Skip nested blocks if the parent block is inactive
+        if lastblock and b.lineend < lastblock.lineend:
+            printdebug("Skipping nested block", b)
+            continue
 
-    for i in range(b.linebegin + 1, b.lineend):
-        signid = basesignid + numgrayouts
-        printdebug("Creating grayout {} in line {}".format(signid, i))
-        vim.command("sign place {} line={} name=PreprocessorGrayout file={}".format(
-            signid, i, vim.current.buffer.name))
-        numgrayouts += 1
-    lastblock = b
+        for i in range(b.linebegin + 1, b.lineend):
+            signid = basesignid + numgrayouts
+            printdebug("Creating grayout {} in line {}".format(signid, i))
+            vim.command("sign place {} line={} name=PreprocessorGrayout file={}".format(
+                signid, i, vim.current.buffer.name))
+            numgrayouts += 1
+        lastblock = b
 
-printdebug("new numgrayouts: {}\n-----------------------------------------------\n".format(str(numgrayouts)))
-vim.command("let b:num_grayout_lines = " + str(numgrayouts))
+    printdebug("new numgrayouts: {}\n-----------------------------------------------\n".format(str(numgrayouts)))
+    vim.command("let b:num_grayout_lines = " + str(numgrayouts))
+
+
+if __name__ == "__main__":
+    grayout()
