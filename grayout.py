@@ -86,7 +86,7 @@ class Parser(object):
                 self._blocks[int(m.group(1))].active = True
 
     def _parse(self):
-        self._tags = []
+        self._blocks = []
         self._parseblock(enumerate(self.lines, 1))
 
     def _parseblock(self, enum):
