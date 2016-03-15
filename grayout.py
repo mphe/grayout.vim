@@ -12,7 +12,6 @@ debug_file = int(vim.eval("g:grayout_debug_logfile"))
 bufnr = int(vim.eval("bufnr('%')"))
 basesignid = (1 + bufnr) * 25397
 numgrayouts = int(vim.eval("b:num_grayout_lines"))
-cmdline = vim.eval("g:grayout_cmd_line")
 
 
 class LineInfo(object):
@@ -27,7 +26,6 @@ class LineInfo(object):
 
 class Parser(object):
     regex = re.compile(r"\s*#\s*(if|else|endif).*")
-    cmdline = ["g++", "-w", "-x", "c++", "-E", "-"]
 
     def __init__(self):
         self._blocks = []
@@ -60,11 +58,10 @@ class Parser(object):
         self.lines = [i for i in lines]
         self._parse()
 
-    def compile(self, cmdline = ""):
-        cmd = cmdline.split() if cmdline else Parser.cmdline
-        p = Popen(cmd, stdout=PIPE, stdin=PIPE, stderr=PIPE)
+    def compile(self, cmdline):
+        printdebug("\nUsing cmd line:", cmdline)
+        p = Popen(cmdline.split(), stdout=PIPE, stdin=PIPE, stderr=PIPE)
         code = self._injectTags()
-        printdebug("\nUsing cmd line:", " ".join(cmd))
         printdebug("\nCompiler input:\n" + code)
         out = p.communicate(code)[0]
         printdebug("\nCompiler output:\n" + out)
@@ -104,6 +101,7 @@ class Parser(object):
         tmp = self._blocks[-1]
         tmp.lineend = self._parseblock(enum)
 
+
 def printdebug(*args):
     text = " ".join([ str(i) for i in args ])
     if debug:
@@ -111,6 +109,7 @@ def printdebug(*args):
     if debug_file:
         with open("grayout-log.txt", "a") as f:
             f.write(text + "\n")
+
 
 def grayout():
     global debug, debug_file, bufnr, basesignid, numgrayouts, cmdline
@@ -126,7 +125,7 @@ def grayout():
 
     parser = Parser()
     parser.parselines(vim.current.buffer)
-    parser.compile(cmdline)
+    parser.compile(vim.eval("g:grayout_cmd_line"))
 
     if debug:
         printdebug("\nInactive blocks:")
