@@ -9,6 +9,7 @@ else
     let g:vim_c_grayout_loaded = 1
     let g:grayout_debug = 0
     let g:grayout_debug_logfile = 0
+    let g:grayout_debug_compiler_inout = 0
     let g:grayout_cmd_line = 'clang -x c++ -E -'
 
     highlight PreprocessorGrayout cterm=italic gui=italic ctermfg=DarkGray guifg=DarkGray

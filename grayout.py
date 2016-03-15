@@ -62,10 +62,17 @@ class Parser(object):
         printdebug("\nUsing cmd line:", cmdline)
         p = Popen(cmdline.split(), stdout=PIPE, stdin=PIPE, stderr=PIPE)
         code = self._injectTags()
-        printdebug("\nCompiler input:\n" + code)
-        out = p.communicate(code)[0]
-        printdebug("\nCompiler output:\n" + out)
+
+        if int(vim.eval("g:grayout_debug_compiler_inout")):
+            printdebug("\nCompiler input:\n", code)
+
+        out, err = p.communicate(code)
         self._parseTags(out)
+
+        if err:
+            printdebug("\nCompiler error:\n", err)
+        if int(vim.eval("g:grayout_debug_compiler_inout")):
+            printdebug("\nCompiler output:\n", out)
 
     def _injectTags(self):
         self._uuid = uuid.uuid1()
@@ -112,7 +119,7 @@ def printdebug(*args):
 
 
 def grayout():
-    global debug, debug_file, bufnr, basesignid, numgrayouts, cmdline
+    global numgrayouts
 
     printdebug("bufnr:", bufnr)
     printdebug("basesignid:", basesignid)
