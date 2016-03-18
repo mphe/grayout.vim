@@ -5,13 +5,11 @@ import re
 from subprocess import Popen, PIPE
 import uuid
 import vim
+import os
+import sys
 
-# TODO: find a better solution for sign ids
 debug = int(vim.eval("g:grayout_debug"))
 debug_file = int(vim.eval("g:grayout_debug_logfile"))
-bufnr = int(vim.eval("bufnr('%')"))
-basesignid = (1 + bufnr) * 25397
-numgrayouts = int(vim.eval("b:num_grayout_lines"))
 
 
 class LineInfo(object):
@@ -119,7 +117,10 @@ def printdebug(*args):
 
 
 def grayout():
-    global numgrayouts
+    # TODO: find a better solution for sign ids
+    bufnr = int(vim.eval("bufnr('%')"))
+    basesignid = (1 + bufnr) * 25397
+    numgrayouts = int(vim.eval("b:num_grayout_lines"))
 
     printdebug("bufnr:", bufnr)
     printdebug("basesignid:", basesignid)
@@ -132,7 +133,7 @@ def grayout():
 
     parser = Parser()
     parser.parselines(vim.current.buffer)
-    parser.compile(vim.eval("g:grayout_cmd_line"))
+    parser.compile(vim.eval("b:grayout_cmd_line") or vim.eval("g:grayout_cmd_line"))
 
     if debug:
         printdebug("\nInactive blocks:")
@@ -161,9 +162,33 @@ def grayout():
             numgrayouts += 1
         lastblock = b
 
-    printdebug("new numgrayouts: {}\n-----------------------------------------------\n".format(str(numgrayouts)))
+    printdebug("new numgrayouts:", numgrayouts)
     vim.command("let b:num_grayout_lines = " + str(numgrayouts))
 
 
+def loadConfig():
+    printdebug("(Re)Loading config file")
+    path = vim.eval("expand('%:p:h')")
+    rootpath = os.path.abspath(os.sep) # should work this way on windows, too
+
+    while not os.path.isfile(path + "/.grayout.conf"):
+        if path == rootpath:
+            printdebug("No config file found")
+            vim.command("let b:grayout_cmd_line = ''")
+            return
+        path = os.path.dirname(path)
+
+    printdebug("Found config file", path + "/.grayout.conf")
+    with open(path + "/.grayout.conf", "r") as f:
+        vim.command("let b:grayout_cmd_line = '{}'".format(" ".join(l.strip() for l in f)))
+
+
 if __name__ == "__main__":
-    grayout()
+    if sys.argv[0] == "config":
+        loadConfig()
+    elif sys.argv[0] == "grayout":
+        grayout()
+    else:
+        printdebug("Unknown option: " + sys.argv[0])
+
+    printdebug("-----------------------------------------------\n")

@@ -14,11 +14,24 @@ else
 
     highlight PreprocessorGrayout cterm=italic gui=italic ctermfg=DarkGray guifg=DarkGray
     sign define PreprocessorGrayout linehl=PreprocessorGrayout
+
+    python import sys
 endif
 
 function! UpdateGrayout()
     if !exists("b:num_grayout_lines")
         let b:num_grayout_lines = 0
     endif
+
+    if !exists('b:grayout_cmd_line')
+        call s:LoadConfig()
+    endif
+
+    python sys.argv = ["grayout"]
+    pyfile grayout.py
+endfunction
+
+function! s:LoadConfig()
+    python sys.argv = ["config"]
     pyfile grayout.py
 endfunction
