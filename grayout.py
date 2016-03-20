@@ -145,7 +145,6 @@ class Plugin(object):
 
 
         printdebug("\nApplying new grayouts...")
-        self._numgrayouts = 0
         lastblock = None
         for b in parser.getInactiveBlocks():
             # Skip nested blocks if the parent block is inactive
@@ -169,6 +168,8 @@ class Plugin(object):
         for i in range(self._numgrayouts):
             printdebug("Removing sign", self._basesignid + i)
             vim.command("sign unplace {} buffer={}".format(self._basesignid + i, self._bufnr))
+        self._numgrayouts = 0
+        vim.command("let b:num_grayout_lines = 0")
 
 
 def loadConfig():
