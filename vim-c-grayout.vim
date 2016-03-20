@@ -31,6 +31,11 @@ function! UpdateGrayout()
     pyfile grayout.py
 endfunction
 
+function! ClearGrayout()
+    python sys.argv = ["clear"]
+    pyfile grayout.py
+endfunction
+
 function! s:LoadConfig()
     python sys.argv = ["config"]
     pyfile grayout.py
