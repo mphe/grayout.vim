@@ -116,54 +116,59 @@ def printdebug(*args):
             f.write(text + "\n")
 
 
-def grayout():
-    # TODO: find a better solution for sign ids
-    bufnr = int(vim.eval("bufnr('%')"))
-    basesignid = (1 + bufnr) * 25397
-    numgrayouts = int(vim.eval("b:num_grayout_lines"))
+class Plugin(object):
+    def __init__(self):
+        # TODO: find a better solution for sign ids
+        self._bufnr = int(vim.eval("bufnr('%')"))
+        self._basesignid = (1 + self._bufnr) * 25397
+        self._numgrayouts = int(vim.eval("b:num_grayout_lines"))
 
-    printdebug("bufnr:", bufnr)
-    printdebug("basesignid:", basesignid)
-    printdebug("numgrayouts:", numgrayouts)
+        printdebug("bufnr:", self._bufnr)
+        printdebug("basesignid:", self._basesignid)
+        printdebug("numgrayouts:", self._numgrayouts)
 
-    printdebug("\nClearing existing grayouts...")
-    for i in range(numgrayouts):
-        printdebug("Removing sign", basesignid + i)
-        vim.command("sign unplace {} buffer={}".format(basesignid + i, bufnr))
+    def grayout(self):
+        self.clear()
 
-    parser = Parser()
-    parser.parselines(vim.current.buffer)
-    parser.compile(vim.eval("b:grayout_cmd_line") or vim.eval("g:grayout_cmd_line"))
+        parser = Parser()
+        parser.parselines(vim.current.buffer)
+        parser.compile(vim.eval("b:grayout_cmd_line") or vim.eval("g:grayout_cmd_line"))
 
-    if debug:
-        printdebug("\nInactive blocks:")
-        for i in parser.getInactiveBlocks():
-            printdebug(i)
+        if debug:
+            printdebug("\nInactive blocks:")
+            for i in parser.getInactiveBlocks():
+                printdebug(i)
 
-        printdebug("\nActive blocks:")
-        for i in parser.getActiveBlocks():
-            printdebug(i)
+            printdebug("\nActive blocks:")
+            for i in parser.getActiveBlocks():
+                printdebug(i)
 
 
-    printdebug("\nApplying new grayouts...")
-    numgrayouts = 0
-    lastblock = None
-    for b in parser.getInactiveBlocks():
-        # Skip nested blocks if the parent block is inactive
-        if lastblock and b.lineend < lastblock.lineend:
-            printdebug("Skipping nested block", b)
-            continue
+        printdebug("\nApplying new grayouts...")
+        self._numgrayouts = 0
+        lastblock = None
+        for b in parser.getInactiveBlocks():
+            # Skip nested blocks if the parent block is inactive
+            if lastblock and b.lineend < lastblock.lineend:
+                printdebug("Skipping nested block", b)
+                continue
 
-        for i in range(b.linebegin + 1, b.lineend):
-            signid = basesignid + numgrayouts
-            printdebug("Creating grayout {} in line {}".format(signid, i))
-            vim.command("sign place {} line={} name=PreprocessorGrayout file={}".format(
-                signid, i, vim.current.buffer.name))
-            numgrayouts += 1
-        lastblock = b
+            for i in range(b.linebegin + 1, b.lineend):
+                signid = self._basesignid + self._numgrayouts
+                printdebug("Creating grayout {} in line {}".format(signid, i))
+                vim.command("sign place {} line={} name=PreprocessorGrayout file={}".format(
+                    signid, i, vim.current.buffer.name))
+                self._numgrayouts += 1
+            lastblock = b
 
-    printdebug("new numgrayouts:", numgrayouts)
-    vim.command("let b:num_grayout_lines = " + str(numgrayouts))
+        printdebug("new numgrayouts:", self._numgrayouts)
+        vim.command("let b:num_grayout_lines = " + str(self._numgrayouts))
+
+    def clear(self):
+        printdebug("\nClearing existing grayouts...")
+        for i in range(self._numgrayouts):
+            printdebug("Removing sign", self._basesignid + i)
+            vim.command("sign unplace {} buffer={}".format(self._basesignid + i, self._bufnr))
 
 
 def loadConfig():
@@ -186,9 +191,13 @@ def loadConfig():
 if __name__ == "__main__":
     if sys.argv[0] == "config":
         loadConfig()
-    elif sys.argv[0] == "grayout":
-        grayout()
     else:
-        printdebug("Unknown option: " + sys.argv[0])
+        p = Plugin()
+        if sys.argv[0] == "grayout":
+            p.grayout()
+        elif sys.argv[0] == "clear":
+            p.clear()
+        else:
+            printdebug("Unknown option: " + sys.argv[0])
 
     printdebug("-----------------------------------------------\n")
