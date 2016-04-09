@@ -120,7 +120,7 @@ class Plugin(object):
     def __init__(self):
         # TODO: find a better solution for sign ids
         self._bufnr = int(vim.eval("bufnr('%')"))
-        self._basesignid = (1 + self._bufnr) * 25397
+        self._basesignid = (1 + self._bufnr) * 2537
         self._numgrayouts = int(vim.eval("b:num_grayout_lines"))
 
         printdebug("bufnr:", self._bufnr)
