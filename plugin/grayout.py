@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 import re
@@ -10,6 +10,15 @@ import sys
 
 debug = int(vim.eval("g:grayout_debug"))
 debug_file = int(vim.eval("g:grayout_debug_logfile"))
+
+
+def printdebug(*args):
+    text = " ".join([ str(i) for i in args ])
+    if debug:
+        print(text)
+    if debug_file:
+        with open("grayout-log.txt", "a") as f:
+            f.write(text + "\n")
 
 
 class LineInfo(object):
@@ -96,24 +105,15 @@ class Parser(object):
             m = Parser.regex.match(l)
             if m:
                 if m.group(1) == "if" or m.group(1) == "else":
-                    self._addtag(n, enum)
+                    self._addblock(n, enum)
                 if m.group(1) == "else" or m.group(1) == "endif":
                     return n
 
-    def _addtag(self, n, enum):
+    def _addblock(self, n, enum):
         # Keep the blocks in ascending order
         self._blocks.append(LineInfo(len(self._blocks), n))
         tmp = self._blocks[-1]
         tmp.lineend = self._parseblock(enum)
-
-
-def printdebug(*args):
-    text = " ".join([ str(i) for i in args ])
-    if debug:
-        print(text)
-    if debug_file:
-        with open("grayout-log.txt", "a") as f:
-            f.write(text + "\n")
 
 
 class Plugin(object):
