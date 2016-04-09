@@ -176,17 +176,19 @@ def loadConfig():
     printdebug("(Re)Loading config file")
     path = vim.eval("expand('%:p:h')")
     rootpath = os.path.abspath(os.sep) # should work this way on windows, too
+    vim.command("let b:grayout_cmd_line = ''")
 
     while not os.path.isfile(path + "/.grayout.conf"):
         if path == rootpath:
             printdebug("No config file found")
-            vim.command("let b:grayout_cmd_line = ''")
             return
         path = os.path.dirname(path)
 
     printdebug("Found config file", path + "/.grayout.conf")
-    with open(path + "/.grayout.conf", "r") as f:
-        vim.command("let b:grayout_cmd_line = '{}'".format(" ".join(l.strip() for l in f)))
+    if vim.eval("g:grayout_confirm") == "0" or \
+    "1" == vim.eval("confirm('Use config file {}/.grayout.conf?', '&Yes\n&No')".format(path)):
+        with open(path + "/.grayout.conf", "r") as f:
+            vim.command("let b:grayout_cmd_line = '{}'".format(" ".join(l.strip() for l in f)))
 
 
 if __name__ == "__main__":

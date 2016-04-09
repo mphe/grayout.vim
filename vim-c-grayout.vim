@@ -11,6 +11,7 @@ else
     let g:grayout_debug_logfile = 0
     let g:grayout_debug_compiler_inout = 0
     let g:grayout_cmd_line = 'clang -x c++ -w -P -E -'
+    let g:grayout_confirm = 1
 
     highlight PreprocessorGrayout cterm=italic gui=italic ctermfg=DarkGray guifg=DarkGray
     sign define PreprocessorGrayout linehl=PreprocessorGrayout
