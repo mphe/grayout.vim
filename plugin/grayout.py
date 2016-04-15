@@ -67,7 +67,7 @@ class Parser(object):
 
     def compile(self, cmdline):
         printdebug("\nUsing cmd line:", cmdline)
-        p = Popen(cmdline.split(), stdout=PIPE, stdin=PIPE, stderr=PIPE)
+        p = Popen(cmdline.split(), stdout=PIPE, stdin=PIPE, stderr=PIPE, cwd=vim.eval("expand('%:p:h')"))
         code = self._injectTags()
 
         if int(vim.eval("g:grayout_debug_compiler_inout")):
