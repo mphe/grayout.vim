@@ -32,7 +32,7 @@ class LineInfo(object):
 
 
 class Parser(object):
-    regex = re.compile(r"\s*#\s*(if|else|endif).*")
+    regex = re.compile(r"\s*#\s*(if|elif|else|endif).*")
 
     def __init__(self):
         self._blocks = []
@@ -104,9 +104,9 @@ class Parser(object):
         for n,l in enum:
             m = Parser.regex.match(l)
             if m:
-                if m.group(1) == "if" or m.group(1) == "else":
+                if m.group(1) == "if" or m.group(1).startswith("el"):
                     self._addblock(n, enum)
-                if m.group(1) == "else" or m.group(1) == "endif":
+                if m.group(1).startswith("el") or m.group(1) == "endif":
                     return n
 
     def _addblock(self, n, enum):
