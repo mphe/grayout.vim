@@ -1,28 +1,25 @@
 # grayout.vim
---------------------------
 
 **grayout.vim** is a simple plugin that grays out inactive preprocessor blocks.
 
-Instead of manually parsing the source file (like [ifdef highlighting](http://www.vim.org/scripts/script.php?script_id=7)), this plugin invokes the compiler (clang by default) on the source file and parses its output. See "[How it works](#Howitworks)" for further information.
+Instead of manually parsing the source file (like [ifdef highlighting](http://www.vim.org/scripts/script.php?script_id=7)), this plugin invokes the compiler (clang by default) on the source file and parses its output. See "[How it works](#how-it-works)" for further information.
 
 Although it's intended to be used for C/C++/Obj-C, it should also work for every language with C-style preprocessor commands.
 
 The plugin was only tested on Linux but should work on other platforms, too (with custom command lines).
 
 ## Installation
---------------------------
 
 1. Make sure your vim version is compiled with python support
 2. Install the plugin
     * Using a plugin manager like vundle or pathogen
     * Alternatively copy the `plugin` directory into your .vim folder
-3. Configure it as you like (see "[Configuration](#Configuration)")
+3. Configure it as you like (see "[Configuration](#configuration)")
 4. ...
 5. Profit
 
 
 ## Usage
---------------------------
 
 * Run `:GrayoutUpdate` to update the grayout.
 * Run `:GrayoutClear` to clear all grayouts.
@@ -31,7 +28,6 @@ The plugin was only tested on Linux but should work on other platforms, too (wit
 All these commands only affect the current buffer.
 
 ## How it works
---------------------------
 
 When calling `:GrayoutUpdate` the source file is parsed for `#if`-`#elif`-`#else`-`#endif` blocks and their line start and end positions are stored in a list.
 
@@ -41,7 +37,6 @@ The comiler output is parsed again for tag-lines. If a tag was found it means th
 
 
 ## Configuration
---------------------------
 
 ### Key mappings
 
@@ -70,7 +65,7 @@ nnoremap <F5> :GrayoutUpdate<CR>
     ```vim
     let g:grayout_confirm = 1
     ```
-    By default the user is asked for confirmation when a config file is found. This might be desirable because config files could potentially contain malicious code. See also "[Config files](#Configfiles)".
+    By default the user is asked for confirmation when a config file is found. This might be desirable because config files could potentially contain malicious code. See also "[Config files](#config-files)".
 
     To disable confirmations:
     ```vim
@@ -112,7 +107,7 @@ gcc -x c -w -P -E
 
 ### Useful Compiler flags
 
-Every flag that reduces compiler output speeds up the grayout process because less lines have to be processed (see "[How it works](#Howitworks)").
+Every flag that reduces compiler output speeds up the grayout process because less lines have to be processed (see "[How it works](#how-it-works)").
 
 Since you usually don't need to check macros from standard libraries, it's a good idea to add `-nostdinc` and/or `-nostdinc++` to your cmd line to tell the compiler to ignore system includes. This could give a significant speed boost as it greatly reduces the compiler output.
 
@@ -141,7 +136,6 @@ highlight PreprocessorGrayout cterm=italic gui=italic ctermfg=DarkGray guifg=Dar
 
 
 ## Todo
---------------------------
 
 * Write vim doc
 * Maybe rewrite the core functionality in vimscript to get rid of the python dependency
