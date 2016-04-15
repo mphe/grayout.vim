@@ -32,7 +32,7 @@ class LineInfo(object):
 
 
 class Parser(object):
-    regex = re.compile(r"\s*#\s*(if|elif|else|endif).*")
+    regex = re.compile(r"\s*#\s*(if|elif|else|endif).*", re.IGNORECASE)
 
     def __init__(self):
         self._blocks = []
