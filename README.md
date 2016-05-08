@@ -2,7 +2,7 @@
 
 **grayout.vim** is a simple plugin that grays out inactive preprocessor blocks.
 
-Instead of manually parsing the source file (like [ifdef highlighting](http://www.vim.org/scripts/script.php?script_id=7)), this plugin invokes the compiler (clang by default) on the source file and parses its output. See "[How it works](#how-it-works)" for further information.
+Instead of adding static syntax regions for each (manually) defined macro, like [ifdef highlighting](http://www.vim.org/scripts/script.php?script_id=7) does, this plugin invokes the compiler on the source file and parses its output. This approach is way more flexible, because the actual parsing is done by the compiler. See "[How it works](#how-it-works)" for further information.
 
 Although it's intended to be used for C/C++/Obj-C, it should also work for every language with C-style preprocessor commands.
 
@@ -76,10 +76,12 @@ nnoremap <F5> :GrayoutUpdate<CR>
     ```vim
     let g:grayout_debug = 0
     ```
+
 * Enable writing debug messages to grayout-log.txt
     ```vim
     let g:grayout_debug_logfile = 0
     ```
+
 * Log compiler in- and output
     ```vim
     let g:grayout_debug_compiler_inout = 0
