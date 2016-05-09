@@ -33,7 +33,7 @@ When calling `:GrayoutUpdate` the source file is parsed for `#if`-`#elif`-`#else
 
 Then a special "tag", containing a random UUID followed by the ID and line information for the current block, is inserted at the start of every block. The modified source is then sent over stdin to the compiler (only to the preprocessor to be precise) using the specified command line (`clang -x c++ -w -P -E -` by default).
 
-The comiler output is parsed again for tag-lines. If a tag was found it means that the block it was injected in is active. The script can then grayout certain lines depending on which tags were found and which tags weren't, since tags inside a inactive block don't show up in the compiler output.
+The compiler output is parsed again for tag-lines. If a tag was found it means that the block it was injected in is active. The script can then grayout certain lines depending on which tags were found and which tags weren't, since tags inside a inactive block don't show up in the compiler output.
 
 
 ## Configuration
