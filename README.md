@@ -56,9 +56,11 @@ nnoremap <F5> :GrayoutUpdate<CR>
 
     If you set a custom command, remember to pass the flags for only invoking the preprocessor and reading the source from stdin (`-E` and `-` for gcc and clang), otherwise it won't work. The language needs to be specified using the `-x` flag, too.
 
-    For example, if you want to use gcc instead of clang you can write:
+    Defining certain macros is done by adding the corresponding compiler flags to the command line. See "[Config files](#config-files)" on how to make settings project specific.
+
+    For example, if you want to use gcc instead of clang and need FOOBAR_MACRO to be defined, you can write:
     ```vim
-    let g:grayout_cmd_line = 'gcc -x c++ -w -P -E -'
+    let g:grayout_cmd_line = 'gcc -x c++ -DFOOBAR_MACRO -w -P -E -'
     ```
 
 * Ask for confirmation when loading a config file.
@@ -103,6 +105,9 @@ Remember to pass the flags for only invoking the preprocessor and reading the so
 For example, for a C project you might write:
 ```
 gcc -x c -w -P -E
+    -DENABLE_FEATURE_X
+    -DANOTHER_FLAG
+    -DSOME_CONSTANT=42
     -nostdinc
     -
 ```
