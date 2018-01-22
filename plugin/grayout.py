@@ -66,8 +66,15 @@ class Parser(object):
         self._parse()
 
     def compile(self, cmdline):
+        if int(vim.eval("g:grayout_workingdir")) == 1 and vim.eval("b:_grayout_workingdir"):
+            workdir = vim.eval("b:_grayout_workingdir")
+        else:
+            workdir = vim.eval("expand('%:p:h')")
+
         printdebug("\nUsing cmd line:", cmdline)
-        p = Popen(cmdline.split(), stdout=PIPE, stdin=PIPE, stderr=PIPE, cwd=vim.eval("expand('%:p:h')"))
+        printdebug("\nUsing working directory:", workdir)
+
+        p = Popen(cmdline.split(), stdout=PIPE, stdin=PIPE, stderr=PIPE, cwd=workdir)
         code = self._injectTags()
 
         if int(vim.eval("g:grayout_debug_compiler_inout")):
@@ -186,9 +193,10 @@ def loadConfig():
 
     printdebug("Found config file", path + "/.grayout.conf")
     if vim.eval("g:grayout_confirm") == "0" or \
-    "1" == vim.eval("confirm('Use config file {}/.grayout.conf?', '&Yes\n&No')".format(path)):
+            "1" == vim.eval("confirm('Use config file {}/.grayout.conf?', '&Yes\n&No')".format(path)):
         with open(path + "/.grayout.conf", "r") as f:
             vim.command("let b:grayout_cmd_line = '{}'".format(" ".join(l.strip() for l in f)))
+        vim.command("let b:_grayout_workingdir = '{}'".format(path))
 
 
 if __name__ == "__main__":

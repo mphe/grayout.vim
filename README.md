@@ -63,6 +63,16 @@ nnoremap <F5> :GrayoutUpdate<CR>
     let g:grayout_cmd_line = 'gcc -x c++ -DFOOBAR_MACRO -w -P -E -'
     ```
 
+* Set the compiler's working directory
+    ```vim
+    let g:grayout_workingdir = 0
+    " Possible values:
+    " 0 = Use current file's directory
+    " 1 = Use .grayout.conf's directory
+    ```
+    Runs the compiler in the specified directory. By default the current file's directory is used.
+    If the second option is selected, but no config file was found, it falls back to the current file's directory.
+
 * Ask for confirmation when loading a config file.
     ```vim
     let g:grayout_confirm = 1
