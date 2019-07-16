@@ -1,8 +1,3 @@
-if !has('python')
-    echoerr 'This plugin requires python.'
-    finish
-endif
-
 if exists('vim_grayout_loaded')
     finish
 else
@@ -14,6 +9,17 @@ else
     let g:grayout_confirm = get(g:, 'grayout_confirm', 1)
     let g:grayout_workingdir = get(g:, 'grayout_workingdir', 0)
 
+    if has('pythonx')
+        let s:grayout_pyversion = 'pyx'
+    elseif has('python3_compiled') && has('python3')
+        let s:grayout_pyversion = 'py3'
+    elseif has('python_compiled') && has('python')
+        let s:grayout_pyversion = 'py'
+    else
+        echoerr 'This plugin requires python.'
+        finish
+    endif
+
     let s:pyscript = expand('<sfile>:p:h').'/grayout.py'
 
     highlight PreprocessorGrayout cterm=italic gui=italic ctermfg=DarkGray guifg=DarkGray
@@ -23,7 +29,7 @@ else
     command! GrayoutClear call s:ClearGrayout()
     command! GrayoutReloadConfig call s:ReloadGrayoutConfig()
 
-    python import sys
+    exec s:grayout_pyversion . ' import sys'
 endif
 
 function! s:UpdateGrayout()
@@ -39,16 +45,18 @@ function! s:UpdateGrayout()
         call s:ReloadGrayoutConfig()
     endif
 
-    python sys.argv = ["grayout"]
-    execute 'pyfile'.s:pyscript
+    call s:RunPyScript('grayout')
 endfunction
 
 function! s:ClearGrayout()
-    python sys.argv = ["clear"]
-    execute 'pyfile'.s:pyscript
+    call s:RunPyScript('clear')
 endfunction
 
 function! s:ReloadGrayoutConfig()
-    python sys.argv = ["config"]
-    execute 'pyfile'.s:pyscript
+    call s:RunPyScript('config')
+endfunction
+
+function! s:RunPyScript(arg)
+    exec s:grayout_pyversion . ' sys.argv = ["' . a:arg . '"]'
+    exec s:grayout_pyversion . 'file ' . s:pyscript
 endfunction

@@ -80,7 +80,8 @@ class Parser(object):
         if int(vim.eval("g:grayout_debug_compiler_inout")):
             printdebug("\nCompiler input:\n", code)
 
-        out, err = p.communicate(code)
+        out, err = p.communicate(code.encode("utf-8"))
+        out = out.decode("utf-8")
         self._parseTags(out)
 
         if err:
