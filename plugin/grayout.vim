@@ -11,9 +11,9 @@ else
 
     if has('pythonx')
         let s:grayout_pyversion = 'pyx'
-    elseif has('python3_compiled') && has('python3')
+    elseif (has('nvim') || has('python3_compiled')) && has('python3')
         let s:grayout_pyversion = 'py3'
-    elseif has('python_compiled') && has('python')
+    elseif (has('nvim') || has('python_compiled')) && has('python')
         let s:grayout_pyversion = 'py'
     else
         echoerr 'This plugin requires python.'
