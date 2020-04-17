@@ -97,13 +97,16 @@ nnoremap <F5> :GrayoutUpdate<CR>
 ### Options
 
 ```vim
-" Set default compile flags
+" Set default compile flags.
 let g:grayout_default_args = []
 
-" Enable to print debug messages inside vim
+" Set libclang searchpath. Leave empty for auto-detect.
+let g:grayout_libclang_path = ''
+
+" Enable to print debug messages inside vim.
 let g:grayout_debug = 0
 
-" Enable to write debug messages to `grayout.log`
+" Enable to write debug messages to `grayout.log`.
 let g:grayout_debug_logfile = 0
 ```
 
@@ -122,7 +125,6 @@ highlight PreprocessorGrayout cterm=italic ctermfg=DarkGray gui=italic guifg=#6c
 * Write vim doc
 * Use autoload
 * Use textprops, nvim_buf_add_highlight, or sign-group feature
-* Expose clang library path setting
 * Fix edge case where consecutive active if/elif/else lines are grayed out when their contents are inactive
 
 

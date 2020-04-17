@@ -6,7 +6,7 @@ import utils
 import vim  # pylint: disable=import-error
 import clang.cindex as cindex
 
-INDEX = cindex.Index.create()
+INDEX: cindex.Index = None
 
 
 def grayout():
@@ -51,3 +51,10 @@ def init():
 
     if os.path.isfile(utils.LOG_FILENAME):
         utils.printdebug("--------------------------")
+
+    clangpath = vim.eval("g:grayout_libclang_path")
+    if clangpath:
+        cindex.Config.set_library_path(clangpath)
+
+    global INDEX
+    INDEX = cindex.Index.create()
