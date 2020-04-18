@@ -58,3 +58,5 @@ def init():
 
     global INDEX
     INDEX = cindex.Index.create()
+
+    utils.printdebug("Initialized")

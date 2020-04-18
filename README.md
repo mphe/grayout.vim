@@ -123,7 +123,6 @@ highlight PreprocessorGrayout cterm=italic ctermfg=DarkGray gui=italic guifg=#6c
 ## Todo
 
 * Write vim doc
-* Use autoload
 * Use textprops, nvim_buf_add_highlight, or sign-group feature
 * Fix edge case where consecutive active if/elif/else lines are grayed out when their contents are inactive
 
