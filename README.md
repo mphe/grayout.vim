@@ -1,21 +1,25 @@
 # grayout.vim
 
-**grayout.vim** is a vim plugin, that grays out inactive C/C++/Obj-C preprocessor regions using libclang.<br/>
-It supports the `compile_commands.json` compilation database, allowing quick and easy project setup.
+**grayout.vim** is a vim plugin that grays out inactive C/C++/Obj-C preprocessor regions using libclang.<br/>
+It supports `compile_commands.json` compilation databases, allowing quick and easy project setup.
 
 It was only tested on Linux but should *theoretically* work on other platforms, too.
 
+
 ## Related Work
-There are some other plugins providing similar functionality.
+There are some other plugins providing similar functionality, but in different ways.
 
 * [ifdef highlighting][ifdefhighlighting] adds static vim syntax rules for each *manually* defined macro. It does not make use of a compiler and requires the user to manually specify which macros are defined, thus being rather unflexible and often fails to properly detect skipped regions.
 
 * [DyeVim][DyeVim] integrates with (a custom fork of) [YouCompleteMe][ycm] to retrieve extended syntax information for semantic highlighting, including skipped preprocessor regions.
-However, it only works with YCM's libclang completer, not clangd.
+However, it only works with YCM's libclang completer, not the newer and more advanced clangd completer.
 
-* [vim-lsp-inactive-regions][lspregions] integrates with [vim-lsp][vimlsp] and uses the cquery or ccls language server to retrieve skipped preprocessor regions.
+* [vim-lsp-inactive-regions][lspregions] integrates with [vim-lsp][vimlsp] and uses the [cquery][cquery] or [ccls][ccls] language server to retrieve skipped preprocessor regions.
 
-* [vim-lsp-cxx-highlight][vimlspcxx] integrates with various LSP plugins and uses the cquery or ccls language server to provide full semantic highlighting, including skipped preprocessor regions.
+* [vim-lsp-cxx-highlight][vimlspcxx] integrates with various LSP plugins and uses the [cquery][cquery] or [ccls][ccls] language server to provide full semantic highlighting, including skipped preprocessor regions.
+
+Therefore, if you are using LSP for completion or syntax checking, you should
+try [vim-lsp-cxx-highlight][vimlspcxx] with [ccls][ccls]. Otherwise, this plugin is probably the best choice.
 
 
 ## Installation
@@ -31,8 +35,6 @@ However, it only works with YCM's libclang completer, not clangd.
 4. Read [Configuration](#configuration)
 5. ...
 6. Profit
-
-
 
 
 ## Usage
@@ -65,8 +67,10 @@ There are three ways of defining compile flags, that are prioritized in the resp
 
 * `.grayout.conf`
 
-    Create a `.grayout.conf` in your project root containing the compile flags. Linebreaks are ignored.<br/>
+    Create a `.grayout.conf` file in your project root containing the compile flags. Linebreaks are ignored.<br/>
     It is recommended to specify `-x <language>` in order to avoid ambiguity, especially with header files.
+
+    Example:
 
     ```
     -x c
@@ -78,6 +82,8 @@ There are three ways of defining compile flags, that are prioritized in the resp
 * `g:grayout_default_args`
 
     The global `g:grayout_default_args` variable holds a list of compile flags and is used when no other configs were found.
+
+    Example:
 
     ```vim
     let g:grayout_default_args = [ '-std=c++11', '-DFOOBAR_MACRO' ]
@@ -115,6 +121,8 @@ let g:grayout_debug_logfile = 0
 If you don't like the default colors for grayouts, you can change them by altering the `PreprocessorGrayout` style.
 By default it links to the `Comment` style.
 
+Example:
+
 ```vim
 highlight PreprocessorGrayout cterm=italic ctermfg=DarkGray gui=italic guifg=#6c6c6c
 ```
@@ -122,17 +130,18 @@ highlight PreprocessorGrayout cterm=italic ctermfg=DarkGray gui=italic guifg=#6c
 
 ## Todo
 
-* Write vim doc
 * Support textprops or nvim_buf_add_highlight
 * Fix edge case where consecutive active if/elif/else lines are grayed out when their contents are inactive
 
 
 [ifdefhighlighting]: http://www.vim.org/scripts/script.php?script_id=7
-[ycm]: https://github.com/ycm-core/YouCompleteMe
 [DyeVim]: https://github.com/davits/DyeVim
+[ycm]: https://github.com/ycm-core/YouCompleteMe
 [lspregions]: https://github.com/krzbe/vim-lsp-inactive-regions
+[vimlsp]: https://github.com/prabirshrestha/vim-lsp
 [vimlspcxx]: https://github.com/jackguo380/vim-lsp-cxx-highlight
 [compdb]: https://github.com/Sarcasm/compdb
 [clangdatabase]: http://clang.llvm.org/docs/JSONCompilationDatabase.html
 [bear]: https://github.com/rizsotto/Bear
-[vimlsp]: https://github.com/prabirshrestha/vim-lsp
+[cquery]: https://github.com/cquery-project/cquery
+[ccls]: https://github.com/MaskRay/ccls
