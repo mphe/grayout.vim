@@ -21,12 +21,12 @@ However, it only works with YCM's libclang completer, not clangd.
 ## Installation
 
 1. Requirements
-    * Vim or Neovim
+    * Vim 8.1+ or Neovim
     * Python 3
     * Clang
 2. Install the plugin
     * Using a plugin manager
-    * Alternatively, copy the `plugin` directory into your vim or neovim folder
+    * Alternatively, copy the contents of this repository to your vim directory
 3. Read [Usage](#usage)
 4. Read [Configuration](#configuration)
 5. ...
@@ -38,7 +38,7 @@ However, it only works with YCM's libclang completer, not clangd.
 ## Usage
 
 * Run `:GrayoutUpdate` to parse the current file and apply highlighting.
-* Run `:GrayoutClear` to clear all grayouts in the current file.
+* Run `:GrayoutClear` to clear all grayout highlights
 * Run `:GrayoutClearCache` to clear the compile command cache, forcing to reload all config files when needed.
 * Run `:GrayoutShowCommand` to print the current file's compile flags.
 
@@ -123,7 +123,7 @@ highlight PreprocessorGrayout cterm=italic ctermfg=DarkGray gui=italic guifg=#6c
 ## Todo
 
 * Write vim doc
-* Use textprops, nvim_buf_add_highlight, or sign-group feature
+* Support textprops or nvim_buf_add_highlight
 * Fix edge case where consecutive active if/elif/else lines are grayed out when their contents are inactive
 
 

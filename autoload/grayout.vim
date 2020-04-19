@@ -46,29 +46,13 @@ endfunction
 
 
 " Sign based highlighting {{{
-function! s:GetBaseSignID()
-    return (1 + bufnr('%')) * 2537
-endfunction
-
 function! s:HighlightLinesSign(lines)
-    let l:basesignid = s:GetBaseSignID()
-
     for l:i in a:lines
-        let l:signid = l:basesignid + b:_num_grayout_lines
-        exec 'sign place ' . l:signid . ' line=' . l:i . ' name=PreprocessorGrayout buffer=' . bufnr('%')
-        let b:_num_grayout_lines += 1
+        exec 'sign place ' . l:i . ' line=' . l:i . ' group=grayout_signs name=PreprocessorGrayout'
     endfor
 endfunction
 
 function! s:ClearHighlightSigns()
-    if exists('b:_num_grayout_lines')
-        let l:basesignid = s:GetBaseSignID()
-
-        for l:i in range(b:_num_grayout_lines)
-            exec 'sign unplace ' . (l:basesignid + l:i) . ' buffer=' . bufnr('%')
-        endfor
-    endif
-
-    let b:_num_grayout_lines = 0
+    sign unplace * group=grayout_signs
 endfunction
 " }}}
