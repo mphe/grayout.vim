@@ -53,6 +53,6 @@ function! s:HighlightLinesSign(lines)
 endfunction
 
 function! s:ClearHighlightSigns()
-    sign unplace * group=grayout_signs
+    exec 'sign unplace * group=grayout_signs buffer=' . bufnr('%')
 endfunction
 " }}}
