@@ -1,9 +1,15 @@
 # grayout.vim
 
 **grayout.vim** is a vim plugin that grays out inactive C/C++/Obj-C preprocessor regions using libclang.<br/>
-It supports `compile_commands.json` compilation databases, allowing quick and easy project setup.
+In addition to custom config files, it also supports `compile_commands.json` compilation databases, allowing quick and easy project setup.<br/>
+Even though it is intended to be used with C/C++/Obj-C, it should work with all filetypes, as long as the `-x <language>` compile flag is set.
 
 It was only tested on Linux but should *theoretically* work on other platforms, too.
+
+
+#### Note
+This plugin was rewritten from scratch in [c378ecb](https://github.com/mphe/grayout.vim/commit/c378ecb348a0937af5a9eb79ec70bce708d126c6).
+If you have been using it before, please read the docs again, as many things changed in the new version.
 
 
 ## Related Work
@@ -31,27 +37,55 @@ try [vim-lsp-cxx-highlight][vimlspcxx] with [ccls][ccls]. Otherwise, this plugin
 2. Install the plugin
     * Using a plugin manager
     * Alternatively, copy the contents of this repository to your vim directory
-3. Read [Usage](#usage)
-4. Read [Configuration](#configuration)
-5. ...
-6. Profit
+3. Read the docs
+4. ...
+5. Profit
 
 
-## Usage
+## Commands
 
 * Run `:GrayoutUpdate` to parse the current file and apply highlighting.
-* Run `:GrayoutClear` to clear all grayout highlights
+* Run `:GrayoutClear` to clear all grayout highlights from current buffer
 * Run `:GrayoutClearCache` to clear the compile command cache, forcing to reload all config files when needed.
 * Run `:GrayoutShowCommand` to print the current file's compile flags.
 
 
 ## Configuration
 
+### Example Configuration
+
+Add this to your `.vimrc` to bind `:GrayoutUpdate` to `<F5>` and to
+automatically update on `CursorHold` in C/C++/Obj-C files.
+
+```vim
+nnoremap <F5> :GrayoutUpdate<CR>
+
+" This can cause lag in more complex files.
+autocmd CursorHold,CursorHoldI * if &ft == 'c' || &ft == 'cpp' || &ft == 'objc' | exec 'GrayoutUpdate' | endif
+```
+
+### Variables
+
+```vim
+" Set default compile flags.
+" These are used, when no `compile_commands.json` or `.grayout.conf` file was found.
+let g:grayout_default_args = [ '-x', 'c++', '-std=c++11' ]
+
+" Set libclang searchpath. Leave empty for auto-detect.
+let g:grayout_libclang_path = ''
+
+" Enable to print debug messages inside vim.
+let g:grayout_debug = 0
+
+" Enable to write debug messages to `grayout.log`.
+let g:grayout_debug_logfile = 0
+```
+
 ### Compile Flags
 
-As with every compiler, clang needs to know your project's compile flags to compile your code.
-
-There are three ways of defining compile flags, that are prioritized in the respective order:
+As with every compiler, clang needs to know your project's compile flags to compile your code.<br/>
+There are three ways of defining compile flags, that are prioritized in the respective order.<br/>
+**Note:** If you make any changes related to compile flags at runtime, you will need to run `:GrayoutClearCache` in order to reload those configs.
 
 * Compilation Database (**recommended**)
 
@@ -82,39 +116,13 @@ There are three ways of defining compile flags, that are prioritized in the resp
 * `g:grayout_default_args`
 
     The global `g:grayout_default_args` variable holds a list of compile flags and is used when no other configs were found.
+    It is recommended to specify `-x <language>` in order to avoid ambiguity, especially with header files.
 
     Example:
 
     ```vim
-    let g:grayout_default_args = [ '-std=c++11', '-DFOOBAR_MACRO' ]
+    let g:grayout_default_args = [ '-x', 'c++', '-std=c++11', '-DFOOBAR_MACRO' ]
     ```
-
-
-### Key mappings
-
-The plugin comes with no default keymappings.
-
-To map `:GrayoutUpdate` to e.g. `<F5>` you can add this to your `.vimrc`:
-
-```vim
-nnoremap <F5> :GrayoutUpdate<CR>
-```
-
-### Options
-
-```vim
-" Set default compile flags.
-let g:grayout_default_args = []
-
-" Set libclang searchpath. Leave empty for auto-detect.
-let g:grayout_libclang_path = ''
-
-" Enable to print debug messages inside vim.
-let g:grayout_debug = 0
-
-" Enable to write debug messages to `grayout.log`.
-let g:grayout_debug_logfile = 0
-```
 
 ### Colors
 
@@ -127,10 +135,15 @@ Example:
 highlight PreprocessorGrayout cterm=italic ctermfg=DarkGray gui=italic guifg=#6c6c6c
 ```
 
+## Contributing
+
+If you encounter any bugs or problems, please make sure to read the docs and open a new issue on Github, if the problem persists.
+
+Pull requests are welcome.
 
 ## Todo
 
-* Support textprops or nvim_buf_add_highlight
+* Support `textprops` or `nvim_buf_add_highlight`
 * Fix edge case where consecutive active if/elif/else lines are grayed out when their contents are inactive
 
 
