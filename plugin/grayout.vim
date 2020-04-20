@@ -6,7 +6,7 @@ let g:vim_grayout_loaded = 1
 
 let g:grayout_debug = get(g:, 'grayout_debug', 0)
 let g:grayout_debug_logfile = get(g:, 'grayout_debug_logfile', 0)
-let g:grayout_default_args = get(g:, 'grayout_default_args', [])
+let g:grayout_default_args = get(g:, 'grayout_default_args', [ '-x', 'c++', '-std=c++11' ])
 let g:grayout_libclang_path = get(g:, 'grayout_libclang_path', '')
 
 highlight link PreprocessorGrayout Comment
