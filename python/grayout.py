@@ -3,6 +3,7 @@
 
 import os
 import utils
+import traceback
 import vim  # pylint: disable=import-error
 import clang.cindex as cindex
 
@@ -28,6 +29,10 @@ LAST_TU = ("", None)
 # @timeit
 def grayout():
     global LAST_TU
+
+    if not INDEX:
+        utils.printdebug("ERROR: Not initialized", info=True)
+        return
 
     # Unnamed buffer
     if not vim.current.buffer.name:
@@ -93,6 +98,13 @@ def init():
     clangpath = vim.eval("g:grayout_libclang_path")
     if clangpath:
         cindex.Config.set_library_path(clangpath)
+
+    try:
+        utils.printdebug("Loading libclang:", cindex.conf.lib)
+    except cindex.LibclangError:
+        utils.printdebug("ERROR: Failed to load libclang", info=True)
+        utils.printdebug(traceback.format_exc())
+        return
 
     global INDEX
     INDEX = cindex.Index.create()
