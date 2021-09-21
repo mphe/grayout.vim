@@ -112,6 +112,9 @@ automatically update on `CursorHold` in C/C++/Obj-C files.
 >
     nnoremap <F5> :GrayoutUpdate<CR>
 
+    " Run GrayoutUpdate when opening and saving a buffer
+    autocmd BufReadPost,BufWritePost * if &ft == 'c' || &ft == 'cpp' || &ft == 'objc' | exec 'GrayoutUpdate' | endif
+
     " This can cause lag in more complex files.
     autocmd CursorHold,CursorHoldI * if &ft == 'c' || &ft == 'cpp' || &ft == 'objc' | exec 'GrayoutUpdate' | endif
 <
@@ -221,8 +224,10 @@ Example:
 ==============================================================================
 CONTRIBUTING                                            *grayout-contributing*
 
-If you encounter any bugs or problems, please make sure to read the docs and
-open a new issue on Github, if the problem persists.
+If you encounter any bugs or problems, please make sure to read the docs. If
+the problem persists, open a new issue on Github. Remember to add
+`let g:grayout_debug_logfile = 1` to your vimrc and attach the `grayout.log`
+logfile to your issue.
 
 Pull requests are welcome.
 

@@ -60,7 +60,10 @@ automatically update on `CursorHold` in C/C++/Obj-C files.
 ```vim
 nnoremap <F5> :GrayoutUpdate<CR>
 
-" This can cause lag in more complex files.
+" Run GrayoutUpdate when opening and saving a buffer
+autocmd BufReadPost,BufWritePost * if &ft == 'c' || &ft == 'cpp' || &ft == 'objc' | exec 'GrayoutUpdate' | endif
+
+" Run GrayoutUpdate when cursor stands still. This can cause lag in more complex files.
 autocmd CursorHold,CursorHoldI * if &ft == 'c' || &ft == 'cpp' || &ft == 'objc' | exec 'GrayoutUpdate' | endif
 ```
 
@@ -106,7 +109,7 @@ There are three ways of defining compile flags, that are prioritized in the resp
 
     Example:
 
-    ```
+    ```text
     -x c
     -DENABLE_FEATURE_X
     -DANOTHER_FLAG
@@ -137,7 +140,7 @@ highlight PreprocessorGrayout cterm=italic ctermfg=DarkGray gui=italic guifg=#6c
 
 ## Contributing
 
-If you encounter any bugs or problems, please make sure to read the docs and open a new issue on Github, if the problem persists.
+If you encounter any bugs or problems, please make sure to read the docs. If the problem persists, open a new issue on Github. Remember to add `let g:grayout_debug_logfile = 1` to your vimrc and attach the `grayout.log` logfile to your issue.
 
 Pull requests are welcome.
 
