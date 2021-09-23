@@ -106,10 +106,8 @@ CONFIGURATION                                                 *grayout-config*
 
 EXAMPLE CONFIGURATION                          *grayout-example-configuration*
 ---------------------
-
-Add this to your `.vimrc` to bind |:GrayoutUpdate| to <F5> and to
-automatically update on `CursorHold` in C/C++/Obj-C files.
 >
+    " Bind :GrayoutUpdate to F5
     nnoremap <F5> :GrayoutUpdate<CR>
 
     " Run GrayoutUpdate when opening and saving a buffer

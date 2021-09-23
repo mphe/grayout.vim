@@ -54,10 +54,8 @@ try [vim-lsp-cxx-highlight][vimlspcxx] with [ccls][ccls]. Otherwise, this plugin
 
 ### Example Configuration
 
-Add this to your `.vimrc` to bind `:GrayoutUpdate` to `<F5>` and to
-automatically update on `CursorHold` in C/C++/Obj-C files.
-
 ```vim
+" Bind :GrayoutUpdate to F5
 nnoremap <F5> :GrayoutUpdate<CR>
 
 " Run GrayoutUpdate when opening and saving a buffer
