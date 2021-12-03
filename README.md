@@ -72,7 +72,7 @@ autocmd CursorHold,CursorHoldI * if &ft == 'c' || &ft == 'cpp' || &ft == 'objc' 
 " These are used, when no `compile_commands.json` or `.grayout.conf` file was found.
 let g:grayout_default_args = [ '-x', 'c++', '-std=c++11' ]
 
-" Set libclang searchpath. Leave empty for auto-detect.
+" Set libclang searchpath. This should point to the directory containing `libclang.so`. Leave empty to auto-detect.
 let g:grayout_libclang_path = ''
 
 " Enable to print debug messages inside vim.
