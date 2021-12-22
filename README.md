@@ -24,8 +24,11 @@ However, it only works with YCM's libclang completer, not the newer and more adv
 
 * [vim-lsp-cxx-highlight][vimlspcxx] integrates with various LSP plugins and uses the [cquery][cquery] or [ccls][ccls] language server to provide full semantic highlighting, including skipped preprocessor regions.
 
+* [coc.nvim][coc] + [clangd][coc-clangd] provide semantic highlighting similar to the option above.
+  Semantic highlighting support in [coc.nvim][coc] needs to be enabled using `let g:coc_default_semantic_highlight_groups = 1` (see [here](https://github.com/clangd/coc-clangd/issues/369)).
+
 Therefore, if you are using LSP for completion or syntax checking, you should
-try [vim-lsp-cxx-highlight][vimlspcxx] with [ccls][ccls]. Otherwise, this plugin is probably the best choice.
+try [coc.nvim][coc] with [clangd][coc-clangd] or alternatively [vim-lsp-cxx-highlight][vimlspcxx] with [ccls][ccls]. Otherwise, this plugin is probably the best choice.
 
 
 ## Installation
@@ -159,3 +162,5 @@ Pull requests are welcome.
 [bear]: https://github.com/rizsotto/Bear
 [cquery]: https://github.com/cquery-project/cquery
 [ccls]: https://github.com/MaskRay/ccls
+[coc]: https://github.com/neoclide/coc.nvim
+[coc-clangd]: https://github.com/clangd/coc-clangd
