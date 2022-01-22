@@ -71,7 +71,7 @@ ways.
 
 - `coc.nvim` [12] + `clangd` [13] provide semantic highlighting similar to the
   option above. Semantic highlighting support in `coc.nvim` [12] needs to be
-  enabled using `let g:coc_default_semantic_highlight_groups = 1` (see [14]).
+  enabled first, see `:h coc-semantic-highlights`.
 
 Therefore, if you are using LSP for completion or syntax checking, you should
 try `coc.nvim` [12] with `clangd` [13] or alternatively
@@ -260,7 +260,6 @@ REFERENCES                                                *grayout-references*
 [11]: https://github.com/Sarcasm/compdb
 [12]: https://github.com/neoclide/coc.nvim
 [13]: https://github.com/clangd/coc-clangd
-[14]: https://github.com/clangd/coc-clangd/issues/369).
 
 
 vim:tw=78:ts=8:ft=help:norl:

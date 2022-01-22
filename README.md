@@ -25,7 +25,7 @@ However, it only works with YCM's libclang completer, not the newer and more adv
 * [vim-lsp-cxx-highlight][vimlspcxx] integrates with various LSP plugins and uses the [cquery][cquery] or [ccls][ccls] language server to provide full semantic highlighting, including skipped preprocessor regions.
 
 * [coc.nvim][coc] + [clangd][coc-clangd] provide semantic highlighting similar to the option above.
-  Semantic highlighting support in [coc.nvim][coc] needs to be enabled using `let g:coc_default_semantic_highlight_groups = 1` (see [here](https://github.com/clangd/coc-clangd/issues/369)).
+  Semantic highlighting support in [coc.nvim][coc] needs to be enabled first, see `:h coc-semantic-highlights`.
 
 Therefore, if you are using LSP for completion or syntax checking, you should
 try [coc.nvim][coc] with [clangd][coc-clangd] or alternatively [vim-lsp-cxx-highlight][vimlspcxx] with [ccls][ccls]. Otherwise, this plugin is probably the best choice.
@@ -75,7 +75,8 @@ autocmd CursorHold,CursorHoldI * if &ft == 'c' || &ft == 'cpp' || &ft == 'objc' 
 " These are used, when no `compile_commands.json` or `.grayout.conf` file was found.
 let g:grayout_default_args = [ '-x', 'c++', '-std=c++11' ]
 
-" Set libclang searchpath. This should point to the directory containing `libclang.so`. Leave empty to auto-detect.
+" Set libclang searchpath. This should point to the directory containing `libclang.so`.
+" Leave empty to auto-detect.
 let g:grayout_libclang_path = ''
 
 " Enable to print debug messages inside vim.
