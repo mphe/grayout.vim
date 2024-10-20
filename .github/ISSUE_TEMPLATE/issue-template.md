@@ -7,6 +7,9 @@ assignees: ''
 
 ---
 
+**Yes, I need grayout.vim and can't use LSP based solutions, because...**
+A short confirmation that you are aware about LSP, which is usually the better option.
+
 **Describe the bug**
 A clear and concise description of what the bug is.
 

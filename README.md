@@ -1,5 +1,17 @@
 # grayout.vim
 
+## This plugin is no longer maintained
+
+This plugin was developed before LSP became popular.
+Common C/C++ language servers like [clangd] or [ccls] provide full semantic highlighting including skipped preprocessor regions in addition to code completion, syntax checking, code actions, etc.
+They can be integrated into Vim/Neovim using LSP plugins like [coc.nvim], [nvim-lspconfig] or [vim-lsp].
+
+Since this plugin is pretty much obsolete nowadays, I don't see much value in further supporting it.<br/>
+It will likely still work as expected in most scenarios, though.
+
+
+## Overview
+
 **grayout.vim** is a vim plugin that grays out inactive C/C++/Obj-C preprocessor regions using libclang.<br/>
 In addition to custom config files, it also supports `compile_commands.json` compilation databases, allowing quick and easy project setup.<br/>
 Even though it is intended to be used with C/C++/Obj-C, it should work with all filetypes, as long as the `-x <language>` compile flag is set.
@@ -7,29 +19,22 @@ Even though it is intended to be used with C/C++/Obj-C, it should work with all 
 It was only tested on Linux but should *theoretically* work on other platforms, too.
 
 
-#### Note
-This plugin was rewritten from scratch in [c378ecb](https://github.com/mphe/grayout.vim/commit/c378ecb348a0937af5a9eb79ec70bce708d126c6).
-If you have been using it before, please read the docs again, as many things changed in the new version.
-
-
 ## Related Work
 There are some other plugins providing similar functionality, but in different ways.
 
-* [ifdef highlighting][ifdefhighlighting] adds static vim syntax rules for each *manually* defined macro. It does not make use of a compiler and requires the user to manually specify which macros are defined, thus being rather unflexible and often fails to properly detect skipped regions.
+* [ifdef highlighting] adds static vim syntax rules for each *manually* defined macro. It does not make use of a compiler and requires the user to manually specify which macros are defined, thus being rather unflexible and often fails to properly detect skipped regions.
 
-* [DyeVim][DyeVim] integrates with (a custom fork of) [YouCompleteMe][ycm] to retrieve extended syntax information for semantic highlighting, including skipped preprocessor regions.
+* [DyeVim] integrates with (a custom fork of) [YouCompleteMe] to retrieve extended syntax information for semantic highlighting, including skipped preprocessor regions.
 However, it only works with YCM's libclang completer, not the newer and more advanced clangd completer.
 
-* [vim-lsp-inactive-regions][lspregions] integrates with [vim-lsp][vimlsp] and uses the [cquery][cquery] or [ccls][ccls] language server to retrieve skipped preprocessor regions.
+* [vim-lsp-inactive-regions] integrates with [vim-lsp] and uses the [cquery] or [ccls] language server to retrieve skipped preprocessor regions.
 
-* [vim-lsp-cxx-highlight][vimlspcxx] integrates with various LSP plugins and uses the [cquery][cquery] or [ccls][ccls] language server to provide full semantic highlighting, including skipped preprocessor regions.
+* [vim-lsp-cxx-highlight] integrates with various LSP plugins and uses the [cquery] or [ccls] language server to provide full semantic highlighting, including skipped preprocessor regions.
 
-* [coc.nvim][coc] + [clangd][coc-clangd] provide semantic highlighting similar to the option above.
-  Semantic highlighting support in [coc.nvim][coc] needs to be enabled first, see `:h coc-semantic-highlights`.
+* Common C/C++ language servers like [clangd] and [ccls] support full semantic highlighting including skipped preprocessor regions.
+  They can be integrated into Vim/Neovim using LSP plugins like [coc.nvim], [nvim-lspconfig] or [vim-lsp].
 
-Therefore, if you are using LSP for completion or syntax checking, you should
-try [coc.nvim][coc] with [clangd][coc-clangd] or alternatively [vim-lsp-cxx-highlight][vimlspcxx] with [ccls][ccls]. Otherwise, this plugin is probably the best choice.
-
+  See also the [maintenance note](#this-plugin-is-no-longer-maintained).
 
 ## Installation
 
@@ -152,16 +157,17 @@ Pull requests are welcome.
 * Fix edge case where consecutive active if/elif/else lines are grayed out when their contents are inactive
 
 
-[ifdefhighlighting]: http://www.vim.org/scripts/script.php?script_id=7
+[ifdef highlighting]: http://www.vim.org/scripts/script.php?script_id=7
 [DyeVim]: https://github.com/davits/DyeVim
-[ycm]: https://github.com/ycm-core/YouCompleteMe
-[lspregions]: https://github.com/krzbe/vim-lsp-inactive-regions
-[vimlsp]: https://github.com/prabirshrestha/vim-lsp
-[vimlspcxx]: https://github.com/jackguo380/vim-lsp-cxx-highlight
+[YouCompleteMe]: https://github.com/ycm-core/YouCompleteMe
+[vim-lsp-inactive-regions]: https://github.com/krzbe/vim-lsp-inactive-regions
+[vim-lsp]: https://github.com/prabirshrestha/vim-lsp
+[vim-lsp-cxx-highlight]: https://github.com/jackguo380/vim-lsp-cxx-highlight
 [compdb]: https://github.com/Sarcasm/compdb
 [clangdatabase]: http://clang.llvm.org/docs/JSONCompilationDatabase.html
 [bear]: https://github.com/rizsotto/Bear
 [cquery]: https://github.com/cquery-project/cquery
 [ccls]: https://github.com/MaskRay/ccls
-[coc]: https://github.com/neoclide/coc.nvim
-[coc-clangd]: https://github.com/clangd/coc-clangd
+[coc.nvim]: https://github.com/neoclide/coc.nvim
+[nvim-lspconfig]: https://github.com/neovim/nvim-lspconfig
+[clangd]: https://clangd.llvm.org/
